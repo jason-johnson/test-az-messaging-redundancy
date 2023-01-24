@@ -1,3 +1,3 @@
-# terraform-az-functions-test
+# test-az-messaging-redundany
 
-Testing some possible setups with azure functions
+Testing message consumption redundancy scenarios
