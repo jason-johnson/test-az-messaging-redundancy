@@ -7,7 +7,7 @@
       "type": "serviceBusTrigger",
       "direction": "in",
       "topicName": "sbt-rdncy-demo-weu-main",
-      "subscriptionName": "MCAPS-Hybrid-REQ-49645-2022-jasojohnson",
+      "subscriptionName": "sbs-rdncy-demo-weu-main",
       "connection": "ServiceBusConnection"
     }
   ]
