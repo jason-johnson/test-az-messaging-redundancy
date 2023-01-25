@@ -16,6 +16,6 @@ variables:
   - name: terraformContainerName
     value: terraform
   - name: terraformStorageAccountName
-    value: samobitf
+    value: stterraformjasojoh
   - name: terraformResourceGroupName
-    value: terraformstate-rg
+    value: rg-manual
