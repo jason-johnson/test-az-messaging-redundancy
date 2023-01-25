@@ -50,10 +50,15 @@ resource "azurerm_linux_function_app" "main" {
   service_plan_id            = azurerm_service_plan.main.id
 
   site_config {
-    application_insights_connection_string = azurerm_application_insights.main.connection_string
-    application_insights_key               = azurerm_application_insights.main.instrumentation_key
+    application_insights_connection_string  = azurerm_application_insights.main.connection_string
+    application_insights_key                = azurerm_application_insights.main.instrumentation_key
+    container_registry_use_managed_identity = true
     application_stack {
-      node_version = 18
+      docker {
+        registry_url = azurerm_container_registry.acr.login_server
+        image_name   = "message-func"
+        image_tag    = "latest"
+      }
     }
   }
 
