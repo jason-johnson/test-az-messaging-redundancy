@@ -1,0 +1,11 @@
+# REQUIREMENTS: none
+# OPTIONAL GLOBAL VARIABLES:
+#   Container - name of the container your terraform config is stored
+#   StorageAccount - name of the storage account your terraform config is stored
+#   ResourceGroupName - name of the resource group your terraform config storage account is in
+# OUTPUTS:
+#  TerraformApply.outputs['Terraform.$output']
+#     These are created for each of your terraform main outputs, using the terraform output name
+variables:
+  - name: servicePrinciple
+    value: mcaps-hybrid-jasojohnson
