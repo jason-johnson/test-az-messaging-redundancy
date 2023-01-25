@@ -27,3 +27,15 @@ resource "azurerm_servicebus_topic" "main" {
 
   enable_partitioning = true
 }
+
+data "namep_azure_name" "sbts" {
+  name     = "main"
+  location = "westeurope"
+  type     = "azurerm_servicebus_subscription"
+}
+
+resource "azurerm_servicebus_subscription" "main" {
+  name               = data.namep_azure_name.sbts.result
+  topic_id           = azurerm_servicebus_topic.main.id
+  max_delivery_count = 1
+}
