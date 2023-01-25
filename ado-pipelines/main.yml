@@ -45,7 +45,7 @@ jobs:
         inputs:
           workingDirectory: demo/message-sender
           azureSubscription: $(servicePrinciple)
-          scriptType: ps
+          scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
             docker build . -t $(acrUrl)/message-func:latest
