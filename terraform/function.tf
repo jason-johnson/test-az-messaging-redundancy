@@ -66,3 +66,15 @@ resource "azurerm_linux_function_app" "main" {
     type = "SystemAssigned"
   }
 }
+
+resource "azurerm_role_assignment" "fun2acr" {
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  principal_id         = azurerm_linux_function_app.main.identity[0].principal_id
+}
+
+resource "azurerm_role_assignment" "fun2sb" {
+  scope                = azurerm_servicebus_topic.main.id
+  role_definition_name = "Azure Service Bus Data Owner"
+  principal_id         = azurerm_linux_function_app.main.identity[0].principal_id
+}
