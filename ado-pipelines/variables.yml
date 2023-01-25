@@ -9,3 +9,13 @@
 variables:
   - name: servicePrinciple
     value: mcaps-hybrid-jasojohnson
+  - name: terraformVersion
+    value: 1.3.6
+  - name: terraformPath
+    value: terraform
+  - name: terraformContainerName
+    value: terraform
+  - name: terraformStorageAccountName
+    value: samobitf
+  - name: terraformResourceGroupName
+    value: terraformstate-rg
