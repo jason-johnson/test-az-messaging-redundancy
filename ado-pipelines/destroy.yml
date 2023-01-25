@@ -10,9 +10,9 @@ parameters:
 variables:
   - template: variables.yml
   - name: saltVar
-    ${{ if eq(parameters.salt, '-' ) }}
+    ${{ if eq(parameters.salt, '-' ) }}:
       value: ''
-    ${{ else }}
+    ${{ else }}:
       value: ${{ parameters.salt }}
 
 pool:
