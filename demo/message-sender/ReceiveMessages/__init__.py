@@ -10,5 +10,5 @@ def main(message: func.ServiceBusMessage):
     message_body = message.get_body().decode("utf-8")
 
     logging.info("Python ServiceBus topic trigger processed message.")
-    logging.info("Message Content Type: " + message_content_type)
-    logging.info("Message Body: " + message_body)
+    logging.info(f"Message Content Type: {message_content_type}")
+    logging.info(f"Message Body: {message_body}")
