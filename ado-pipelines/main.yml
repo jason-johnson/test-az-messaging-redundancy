@@ -49,5 +49,5 @@ jobs:
           scriptLocation: inlineScript
           inlineScript: |
             az acr login -n $(acrName)
-            docker build . -t $(acrUrl)/message-func:latest
+            docker build . -t $(acrUrl)/message-func:latest -t $(acrUrl)/message-func:$(Build.BuildNumber)
             docker push $(acrUrl)/message-func:latest
