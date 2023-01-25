@@ -11,10 +11,14 @@ TOPIC_NAME = "sbt-rdncy-demo-weu-main"
 
 credential = DefaultAzureCredential()
 
+def make_message(id, message):
+    if id % 5 == 0: return "SLEEP"
+
+    return message
 
 async def send_single_message(sender):
     # Create a Service Bus message
-    message = ServiceBusMessage("Single Message")
+    message = ServiceBusMessage("ORDER")
     # send the message to the topic
     await sender.send_messages(message)
     print("Sent a single message")
@@ -22,7 +26,7 @@ async def send_single_message(sender):
 
 async def send_a_list_of_messages(sender):
     # Create a list of messages
-    messages = [ServiceBusMessage("Message in list") for _ in range(5)]
+    messages = [ServiceBusMessage(make_message(i, "LIST ORDER")) for i in range(50)]
     # send the list of messages to the topic
     await sender.send_messages(messages)
     print("Sent a list of 5 messages")
@@ -32,11 +36,11 @@ async def send_batch_message(sender):
     # Create a batch of messages
     async with sender:
         batch_message = await sender.create_message_batch()
-        for _ in range(10):
+        for i in range(100):
             try:
                 # Add a message to the batch
                 batch_message.add_message(ServiceBusMessage(
-                    "Message inside a ServiceBusMessageBatch"))
+                    make_message(i, "BATCH ORDER")))
             except ValueError:
                 # ServiceBusMessageBatch object reaches max_size.
                 # New ServiceBusMessageBatch object can be created here to send more data.
