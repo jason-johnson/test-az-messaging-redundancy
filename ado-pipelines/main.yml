@@ -19,16 +19,34 @@ variables:
 pool:
   vmImage: "ubuntu-latest"
 
-steps:
-  - template: terraform.yml
-    parameters:
-      terraformVersion: $(terraformVersion)
-      terraformPath: $(terraformPath)
-      servicePrinciple: $(servicePrinciple)
-      containerName: $(terraformContainerName)
-      storageAccountName: $(terraformStorageAccountName)
-      workspace: ${{ parameters.salt }}
-      useWorkspace: ${{ parameters.useWorkspace }}
-      resourceGroupName: $(terraformResourceGroupName)
-      env:
-        TF_VAR_branch: $(saltVar)
+jobs:
+  - job: terraform
+    steps:
+      - template: terraform.yml
+        parameters:
+          terraformVersion: $(terraformVersion)
+          terraformPath: $(terraformPath)
+          servicePrinciple: $(servicePrinciple)
+          containerName: $(terraformContainerName)
+          storageAccountName: $(terraformStorageAccountName)
+          workspace: ${{ parameters.salt }}
+          useWorkspace: ${{ parameters.useWorkspace }}
+          resourceGroupName: $(terraformResourceGroupName)
+          env:
+            TF_VAR_branch: $(saltVar)
+  - job: deploy
+    dependsOn: terraform
+    variables:
+      acrName: $[ dependencies.terraform.outputs['Terraform.acr_name'] ]
+      acrUrl: $[ dependencies.terraform.outputs['Terraform.acr_url'] ]
+    steps:
+      - task: AzureCLI@2
+        displayName: Azure CLI
+        inputs:
+          workingDirectory: demo/message-sender
+          azureSubscription: $(servicePrinciple)
+          scriptType: ps
+          scriptLocation: inlineScript
+          inlineScript: |
+            docker build . -t $(acrUrl)/message-func:latest
+            docker push $(acrUrl)/message-func:latest

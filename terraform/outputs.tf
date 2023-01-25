@@ -17,3 +17,13 @@ output "fun_name" {
   description = "Name of project azure function app"
   value       = azurerm_linux_function_app.main.name
 }
+
+output "acr_name" {
+  description = "Name of project azure container registry"
+  value       = azurerm_container_registry.acr.name
+}
+
+output "acr_url" {
+  description = "Url of project azure container registry"
+  value       = azurerm_container_registry.acr.login_server
+}
