@@ -24,7 +24,7 @@ resource "azurerm_container_registry" "acr" {
 }
 
 data "namep_azure_name" "ws" {
-  name     = var.name
+  name     = "main"
   location = "westeurope"
   type     = "azurerm_log_analytics_workspace"
 }
@@ -38,7 +38,7 @@ resource "azurerm_log_analytics_workspace" "main" {
 }
 
 data "namep_azure_name" "ai" {
-  name     = var.name
+  name     = "main"
   location = "westeurope"
   type     = "azurerm_application_insights"
 }
