@@ -31,8 +31,8 @@ data "namep_azure_name" "ws" {
 
 resource "azurerm_log_analytics_workspace" "main" {
   name                = data.namep_azure_name.ws.result
-  resource_group_name = var.resource_group_name
-  location            = var.resource_group_location
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   sku                 = "PerGB2018"
   retention_in_days   = 30
 }
@@ -45,8 +45,8 @@ data "namep_azure_name" "ai" {
 
 resource "azurerm_application_insights" "main" {
   name                = data.namep_azure_name.ai.result
-  resource_group_name = var.resource_group_name
-  location            = var.resource_group_location
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
   workspace_id        = azurerm_log_analytics_workspace.main.id
   application_type    = "Node.JS"
 }
