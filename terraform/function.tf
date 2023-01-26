@@ -62,6 +62,10 @@ resource "azurerm_linux_function_app" "main" {
     }
   }
 
+  app_settings = {
+    "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
+  }
+
   identity {
     type = "SystemAssigned"
   }
