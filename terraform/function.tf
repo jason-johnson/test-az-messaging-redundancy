@@ -50,15 +50,42 @@ resource "azurerm_linux_function_app" "main" {
   service_plan_id            = azurerm_service_plan.main.id
 
   site_config {
-    application_insights_connection_string = azurerm_application_insights.main.connection_string
-    application_insights_key               = azurerm_application_insights.main.instrumentation_key
-    health_check_path                      = "/api/http-example"
+    application_insights_connection_string  = azurerm_application_insights.main.connection_string
+    application_insights_key                = azurerm_application_insights.main.instrumentation_key
+    container_registry_use_managed_identity = true
     application_stack {
-      node_version = 18
+      docker {
+        registry_url = azurerm_container_registry.acr.login_server
+        image_name   = "message-func"
+        image_tag    = "latest"
+      }
     }
+
+    app_service_logs {
+      disk_quota_mb         = 35
+      retention_period_days = 5
+    }
+
+  }
+
+  app_settings = {
+    "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
+    "ServiceBusConnection__fullyQualifiedNamespace": "${azurerm_servicebus_namespace.main.name}.servicebus.windows.net"
   }
 
   identity {
     type = "SystemAssigned"
   }
+}
+
+resource "azurerm_role_assignment" "fun2acr" {
+  scope                = azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  principal_id         = azurerm_linux_function_app.main.identity[0].principal_id
+}
+
+resource "azurerm_role_assignment" "fun2sb" {
+  scope                = azurerm_servicebus_topic.main.id
+  role_definition_name = "Azure Service Bus Data Owner"
+  principal_id         = azurerm_linux_function_app.main.identity[0].principal_id
 }

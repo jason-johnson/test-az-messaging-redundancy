@@ -1,7 +1,8 @@
 {
+  "scriptFile": "__init__.py",
   "bindings": [
     {
-      "authLevel": "anonymous",
+      "authLevel": "Anonymous",
       "type": "httpTrigger",
       "direction": "in",
       "name": "req",
@@ -13,8 +14,7 @@
     {
       "type": "http",
       "direction": "out",
-      "name": "res"
+      "name": "$return"
     }
-  ],
-  "scriptFile": "../dist/http-example/index.js"
+  ]
 }
