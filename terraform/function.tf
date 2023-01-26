@@ -60,6 +60,12 @@ resource "azurerm_linux_function_app" "main" {
         image_tag    = "latest"
       }
     }
+
+    app_service_logs {
+      disk_quota_mb         = 35
+      retention_period_days = 5
+    }
+
   }
 
   app_settings = {
