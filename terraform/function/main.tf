@@ -63,6 +63,9 @@ resource "azurerm_linux_function_app" "main" {
   app_settings = {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
     "ServiceBusConnection__fullyQualifiedNamespace" : "${var.servicebus_namespace_name}.servicebus.windows.net"
+    "FULLY_QUALIFIED_NAMESPACE" = "${var.servicebus_namespace_name}.servicebus.windows.net"
+    "TOPIC_NAME" = var.servicebus_topic_name
+    "SUBSCRIPTION_NAME" = var.servicebus_subscription_name
   }
 
   identity {

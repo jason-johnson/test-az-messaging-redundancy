@@ -10,6 +10,8 @@ module "main-function" {
     acr_id = azurerm_container_registry.acr.id
     servicebus_namespace_name = azurerm_servicebus_namespace.main.name
     servicebus_topic_id = azurerm_servicebus_topic.main.id
+    servicebus_topic_name = azurerm_servicebus_topic.main.name
+    servicebus_subscription_name = azurerm_servicebus_subscription.main.name
 }
 
 #module "second-function" {
@@ -23,4 +25,6 @@ module "main-function" {
 #    acr_id = azurerm_container_registry.acr.id
 #    servicebus_namespace_name = azurerm_servicebus_namespace.main.name
 #    servicebus_topic_id = azurerm_servicebus_topic.main.id
+#    servicebus_topic_name = azurerm_servicebus_topic.main.name
+#    servicebus_subscription_name = azurerm_servicebus_subscription.main.name
 #}

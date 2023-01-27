@@ -1,4 +1,5 @@
 import logging
+import os
 
 import azure.functions as func
 import asyncio
@@ -6,8 +7,8 @@ from azure.servicebus.aio import ServiceBusClient
 from azure.servicebus import ServiceBusMessage
 from azure.identity.aio import DefaultAzureCredential
 
-FULLY_QUALIFIED_NAMESPACE = "sb-rdncy-demo-weu-main.servicebus.windows.net"
-TOPIC_NAME = "sbt-rdncy-demo-weu-main"
+FULLY_QUALIFIED_NAMESPACE =  os.environ.get('FULLY_QUALIFIED_NAMESPACE', "sb-rdncy-demo-weu-main.servicebus.windows.net") 
+TOPIC_NAME = os.environ.get("TOPIC_NAME", "sbt-rdncy-demo-weu-main")
 
 credential = DefaultAzureCredential()
 
