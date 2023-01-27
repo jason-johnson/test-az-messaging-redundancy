@@ -3,19 +3,19 @@ output "rg_name" {
   value       = azurerm_resource_group.rg.name
 }
 
-output "sa_name" {
+output "main_func_sa_name" {
   description = "Name of project storage account"
-  value       = azurerm_storage_account.main.name
+  value       = module.main-function.sa_name
 }
 
-output "sp_name" {
+output "main_func_sp_name" {
   description = "Name of project service plan"
-  value       = azurerm_service_plan.main.name
+  value       = module.main-function.sp_name
 }
 
-output "fun_name" {
+output "main_fun_name" {
   description = "Name of project azure function app"
-  value       = azurerm_linux_function_app.main.name
+  value       = module.main-function.function_name
 }
 
 output "acr_name" {

@@ -6,8 +6,8 @@
       "name": "message",
       "type": "serviceBusTrigger",
       "direction": "in",
-      "topicName": "sbt-rdncy-demo-weu-main",
-      "subscriptionName": "sbs-rdncy-demo-weu-main",
+      "topicName": "%TOPIC_NAME%",
+      "subscriptionName": "%SUBSCRIPTION_NAME%",
       "connection": "ServiceBusConnection"
     }
   ]

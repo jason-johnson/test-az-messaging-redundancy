@@ -9,25 +9,6 @@ resource "azurerm_resource_group" "rg" {
   location = "West Europe"
 }
 
-data "namep_azure_name" "sa" {
-  name     = "main"
-  location = "westeurope"
-  type     = "azurerm_storage_account"
-}
-resource "azurerm_storage_account" "main" {
-  name                     = data.namep_azure_name.sa.result
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
-}
-
-data "namep_azure_name" "sp" {
-  name     = "main"
-  location = "westeurope"
-  type     = "azurerm_app_service_plan"
-}
-
 data "namep_azure_name" "acr" {
   name     = "main"
   location = "westeurope"
@@ -40,4 +21,32 @@ resource "azurerm_container_registry" "acr" {
   location            = azurerm_resource_group.rg.location
   sku                 = "Premium"
   admin_enabled       = false
+}
+
+data "namep_azure_name" "ws" {
+  name     = "main"
+  location = "westeurope"
+  type     = "azurerm_log_analytics_workspace"
+}
+
+resource "azurerm_log_analytics_workspace" "main" {
+  name                = data.namep_azure_name.ws.result
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+}
+
+data "namep_azure_name" "ai" {
+  name     = "main"
+  location = "westeurope"
+  type     = "azurerm_application_insights"
+}
+
+resource "azurerm_application_insights" "main" {
+  name                = data.namep_azure_name.ai.result
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  workspace_id        = azurerm_log_analytics_workspace.main.id
+  application_type    = "Node.JS"
 }
