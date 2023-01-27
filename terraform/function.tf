@@ -12,7 +12,7 @@ module "main-function" {
     servicebus_topic_id = azurerm_servicebus_topic.main.id
 }
 
-module "main-function" {
+module "second-function" {
     source = "./function"
     name = "second"
     resource_group_name = azurerm_resource_group.rg.name
