@@ -40,5 +40,6 @@ resource "azurerm_resource_group_template_deployment" "aksc_deploy" {
     blobCSIDriver = {value=var.blobCSIDriver}
     oidcIssuer = {value=var.oidcIssuer}
     workloadIdentity = {value=var.workloadIdentity}
+    automatedDeployment = {value=true}
   })
 }
