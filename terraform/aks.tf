@@ -10,7 +10,7 @@ data "http" "aksc_release" {
 }
 
 data "namep_azure_name" "aksc" {
-  name     = "main"
+  name     = "m"
   location = "westeurope"
   type     = "azurerm_kubernetes_cluster"
 }
