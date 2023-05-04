@@ -25,5 +25,6 @@ provider "namep" {
   resource_formats = {
     azurerm_eventgrid_system_topic = "egst-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
     azurerm_eventgrid_system_topic_event_subscription = "egsts-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
+    azurerm_kubernetes_cluster = "#{SLUG}-rd-dem-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
   }
 }
