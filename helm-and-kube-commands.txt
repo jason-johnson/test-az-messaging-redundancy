@@ -1,0 +1,9 @@
+helm upgrade --install gitlab gitlab/gitlab \
+--timeout 600s \    
+--set global.hosts.domain=doggyme.xyz \
+--set global.hosts.externalIP=20.123.238.161 \
+--set certmanager-issuer.email=me@example.com \
+--set postgresql.image.tag=13.6.0 \
+--set global.appConfig.terraformState.enable=true \
+--namespace gitlab
+
