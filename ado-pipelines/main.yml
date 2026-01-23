@@ -17,7 +17,7 @@ variables:
       value: ${{ parameters.salt }}
 
 pool:
-  vmImage: "ubuntu-latest"
+  vmImage: "jasojohnson-mcaps"
 
 jobs:
   - job: terraform
