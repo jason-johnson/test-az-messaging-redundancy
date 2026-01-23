@@ -1,11 +1,5 @@
-data "namep_azure_name" "sbns" {
-  name     = "main"
-  location = "westeurope"
-  type     = "azurerm_servicebus_namespace"
-}
-
 resource "azurerm_servicebus_namespace" "main" {
-  name                = data.namep_azure_name.sbns.result
+  name                = provider::namep::namestring("azurerm_servicebus_namespace", data.namep_configuration.main.configuration, { name = "main" })
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   sku                 = "Standard"
@@ -15,27 +9,15 @@ resource "azurerm_servicebus_namespace" "main" {
   }
 }
 
-data "namep_azure_name" "sbt" {
-  name     = "main"
-  location = "westeurope"
-  type     = "azurerm_servicebus_topic"
-}
-
 resource "azurerm_servicebus_topic" "main" {
-  name         = data.namep_azure_name.sbt.result
+  name         = provider::namep::namestring("azurerm_servicebus_topic", data.namep_configuration.main.configuration, { name = "main" })
   namespace_id = azurerm_servicebus_namespace.main.id
 
   enable_partitioning = true
 }
 
-data "namep_azure_name" "sbts" {
-  name     = "main"
-  location = "westeurope"
-  type     = "azurerm_servicebus_subscription"
-}
-
 resource "azurerm_servicebus_subscription" "main" {
-  name               = data.namep_azure_name.sbts.result
+  name               = provider::namep::namestring("azurerm_servicebus_subscription", data.namep_configuration.main.configuration, { name = "main" })
   topic_id           = azurerm_servicebus_topic.main.id
   max_delivery_count = 1
 }

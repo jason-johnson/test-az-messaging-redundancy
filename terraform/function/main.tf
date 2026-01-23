@@ -1,39 +1,43 @@
-data "namep_azure_name" "sa" {
-  name     = var.name
-  location = "westeurope"
-  type     = "azurerm_storage_account"
+data "namep_azure_locations" "main" {}
+
+data "namep_azure_caf_types" "main" {}
+
+data "namep_configuration" "main" {
+  variable_maps = data.namep_azure_locations.main.location_maps
+  types         = data.namep_azure_caf_types.main.types
+  formats = {
+    azure_nodash = "#{SLUG}#{TOKEN_1}#{TOKEN_2}#{LOCS[LOC]}#{NAME}#{BRANCH}"
+    azure_dashes = "#{SLUG}-#{TOKEN_1}-#{TOKEN_2}-#{LOCS[LOC]}-#{NAME}#{-BRANCH}"
+  }
+
+  variables = {
+    name    = var.name
+    loc     = "westeurope"
+    slug    = "RDNCY DEMO"
+    token_1 = ""
+    token_2 = ""
+    branch  = ""
+  }
 }
 
 resource "azurerm_storage_account" "main" {
-  name                     = data.namep_azure_name.sa.result
+  name                     = provider::namep::namestring("azurerm_storage_account", data.namep_configuration.main.configuration, { name = var.name })
   resource_group_name      = var.resource_group_name
   location                 = var.resource_group_location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
 
-data "namep_azure_name" "sp" {
-  name     = var.name
-  location = "westeurope"
-  type     = "azurerm_app_service_plan"
-}
-
 resource "azurerm_service_plan" "main" {
-  name                = data.namep_azure_name.sp.result
+  name                = provider::namep::namestring("azurerm_app_service_plan", data.namep_configuration.main.configuration, { name = var.name })
   resource_group_name = var.resource_group_name
   location            = var.resource_group_location
   os_type             = "Linux"
   sku_name            = "EP1"
 }
 
-data "namep_azure_name" "fun" {
-  name     = var.name
-  location = "westeurope"
-  type     = "azurerm_function_app"
-}
-
 resource "azurerm_linux_function_app" "main" {
-  name                = data.namep_azure_name.fun.result
+  name                = provider::namep::namestring("azurerm_function_app", data.namep_configuration.main.configuration, { name = var.name })
   resource_group_name = var.resource_group_name
   location            = var.resource_group_location
 

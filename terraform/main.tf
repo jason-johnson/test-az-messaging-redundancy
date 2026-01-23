@@ -12,18 +12,28 @@ provider "azurerm" {
   }
 }
 
-provider "namep" {
-  slice_string                 = "RDNCY DEMO"
-  default_location             = "westeurope"
-  default_nodash_name_format   = "#{SLUG}#{TOKEN_1}#{TOKEN_2}#{SHORT_LOC}#{NAME}#{BRANCH}"
-  default_resource_name_format = "#{SLUG}-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
+provider "namep" {}
 
-  extra_tokens = {
-    branch = var.branch
+data "namep_azure_locations" "main" {}
+
+data "namep_azure_caf_types" "main" {}
+
+data "namep_configuration" "main" {
+  variable_maps = data.namep_azure_locations.main.location_maps
+  types         = data.namep_azure_caf_types.main.types
+  formats = {
+    azure_nodash  = "#{SLUG}#{TOKEN_1}#{TOKEN_2}#{LOCS[LOC]}#{NAME}#{BRANCH}"
+    azure_dashes  = "#{SLUG}-#{TOKEN_1}-#{TOKEN_2}-#{LOCS[LOC]}-#{NAME}#{-BRANCH}"
+    azure_eventgrid_system_topic = "egst-#{TOKEN_1}-#{TOKEN_2}-#{LOCS[LOC]}-#{NAME}#{-BRANCH}"
+    azure_eventgrid_system_topic_event_subscription = "egsts-#{TOKEN_1}-#{TOKEN_2}-#{LOCS[LOC]}-#{NAME}#{-BRANCH}"
   }
 
-  resource_formats = {
-    azurerm_eventgrid_system_topic = "egst-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
-    azurerm_eventgrid_system_topic_event_subscription = "egsts-#{TOKEN_1}-#{TOKEN_2}-#{SHORT_LOC}-#{NAME}#{-BRANCH}"
+  variables = {
+    name    = "main"
+    loc     = "westeurope"
+    slug    = "RDNCY DEMO"
+    token_1 = ""
+    token_2 = ""
+    branch  = var.branch
   }
 }
