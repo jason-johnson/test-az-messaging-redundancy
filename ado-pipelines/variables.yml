@@ -8,14 +8,14 @@
 #     These are created for each of your terraform main outputs, using the terraform output name
 variables:
   - name: servicePrinciple
-    value: mcaps-hybrid-jasojohnson
+    value: mcaps-jasojohnson-1
   - name: terraformVersion
     value: 1.3.6
   - name: terraformPath
     value: terraform
   - name: terraformContainerName
-    value: terraform
+    value: terraform-az-messaging
   - name: terraformStorageAccountName
-    value: stterraformjasojoh
+    value: sajasonmcapterraform
   - name: terraformResourceGroupName
     value: rg-manual
