@@ -13,8 +13,8 @@ data "namep_configuration" "main" {
   variables = {
     name   = var.name
     loc    = "westeurope"
-    app    = "RDNCY"
-    env    = "DEMO"
+    app    = "rdncy"
+    env    = "demo"
     branch = ""
   }
 }

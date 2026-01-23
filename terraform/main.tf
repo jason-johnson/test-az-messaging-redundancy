@@ -31,8 +31,8 @@ data "namep_configuration" "main" {
   variables = {
     name   = "main"
     loc    = "westeurope"
-    app    = "RDNCY"
-    env    = "DEMO"
+    app    = "rdncy"
+    env    = "demo"
     branch = var.branch
   }
 }
