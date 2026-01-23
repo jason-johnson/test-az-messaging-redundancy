@@ -1,10 +1,10 @@
 resource "azurerm_resource_group" "rg" {
-  name     = provider::namep::namestring("azurerm_resource_group", data.namep_configuration.main.configuration, { name = "main" })
+  name     = provider::namep::namestring("azurerm_resource_group", data.namep_configuration.main.configuration)
   location = "West Europe"
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                = provider::namep::namestring("azurerm_container_registry", data.namep_configuration.main.configuration, { name = "main" })
+  name                = provider::namep::namestring("azurerm_container_registry", data.namep_configuration.main.configuration)
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "Premium"
@@ -12,7 +12,7 @@ resource "azurerm_container_registry" "acr" {
 }
 
 resource "azurerm_log_analytics_workspace" "main" {
-  name                = provider::namep::namestring("azurerm_log_analytics_workspace", data.namep_configuration.main.configuration, { name = "main" })
+  name                = provider::namep::namestring("azurerm_log_analytics_workspace", data.namep_configuration.main.configuration)
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "PerGB2018"
@@ -20,7 +20,7 @@ resource "azurerm_log_analytics_workspace" "main" {
 }
 
 resource "azurerm_application_insights" "main" {
-  name                = provider::namep::namestring("azurerm_application_insights", data.namep_configuration.main.configuration, { name = "main" })
+  name                = provider::namep::namestring("azurerm_application_insights", data.namep_configuration.main.configuration)
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   workspace_id        = azurerm_log_analytics_workspace.main.id
