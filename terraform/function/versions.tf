@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~> 3.34"
+      version = "~> 4.58.0"
     }
     namep = {
       source  = "jason-johnson/namep"
