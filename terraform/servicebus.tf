@@ -13,7 +13,7 @@ resource "azurerm_servicebus_topic" "main" {
   name         = provider::namep::namestring("azurerm_servicebus_topic", data.namep_configuration.main.configuration)
   namespace_id = azurerm_servicebus_namespace.main.id
 
-  enable_partitioning = true
+  partitioning_enabled = true
 }
 
 resource "azurerm_servicebus_subscription" "main" {
