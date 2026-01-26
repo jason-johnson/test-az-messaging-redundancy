@@ -17,7 +17,7 @@ module "main-function" {
 
 module "second-function" {
   source                           = "./function"
-  name                             = "second"
+  name                             = "sec"
   namep_configuration              = data.namep_configuration.main
   resource_group_name              = azurerm_resource_group.rg.name
   resource_group_location          = azurerm_resource_group.rg.location
