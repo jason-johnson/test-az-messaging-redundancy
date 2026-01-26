@@ -1,39 +1,42 @@
-data "namep_azure_name" "sa" {
-  name     = var.name
-  location = "westeurope"
-  type     = "azurerm_storage_account"
+data "namep_azure_locations" "main" {}
+
+data "namep_azure_caf_types" "main" {}
+
+data "namep_configuration" "main" {
+  variable_maps = data.namep_azure_locations.main.location_maps
+  types         = data.namep_azure_caf_types.main.types
+  formats = {
+    azure_nodash = "#{SLUG}#{APP}#{ENV}#{LOCS[LOC]}#{NAME}#{SALT}"
+    azure_dashes = "#{SLUG}-#{APP}-#{ENV}-#{LOCS[LOC]}-#{NAME}#{-SALT}"
+  }
+
+  variables = {
+    name = var.name
+    loc  = "westeurope"
+    app  = "rdncy"
+    env  = "demo"
+    salt = ""
+  }
 }
 
 resource "azurerm_storage_account" "main" {
-  name                     = data.namep_azure_name.sa.result
+  name                     = provider::namep::namestring("azurerm_storage_account", data.namep_configuration.main.configuration)
   resource_group_name      = var.resource_group_name
   location                 = var.resource_group_location
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
 
-data "namep_azure_name" "sp" {
-  name     = var.name
-  location = "westeurope"
-  type     = "azurerm_app_service_plan"
-}
-
 resource "azurerm_service_plan" "main" {
-  name                = data.namep_azure_name.sp.result
+  name                = provider::namep::namestring("azurerm_app_service_plan", data.namep_configuration.main.configuration)
   resource_group_name = var.resource_group_name
   location            = var.resource_group_location
   os_type             = "Linux"
   sku_name            = "EP1"
 }
 
-data "namep_azure_name" "fun" {
-  name     = var.name
-  location = "westeurope"
-  type     = "azurerm_function_app"
-}
-
 resource "azurerm_linux_function_app" "main" {
-  name                = data.namep_azure_name.fun.result
+  name                = provider::namep::namestring("azurerm_function_app", data.namep_configuration.main.configuration)
   resource_group_name = var.resource_group_name
   location            = var.resource_group_location
 
@@ -64,8 +67,8 @@ resource "azurerm_linux_function_app" "main" {
     "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "false"
     "ServiceBusConnection__fullyQualifiedNamespace" : "${var.servicebus_namespace_name}.servicebus.windows.net"
     "FULLY_QUALIFIED_NAMESPACE" = "${var.servicebus_namespace_name}.servicebus.windows.net"
-    "TOPIC_NAME" = var.servicebus_topic_name
-    "SUBSCRIPTION_NAME" = var.servicebus_subscription_name
+    "TOPIC_NAME"                = var.servicebus_topic_name
+    "SUBSCRIPTION_NAME"         = var.servicebus_subscription_name
   }
 
   identity {

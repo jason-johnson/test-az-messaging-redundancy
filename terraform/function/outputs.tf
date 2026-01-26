@@ -1,5 +1,5 @@
 output "sa_name" {
-    value = azurerm_storage_account.main.name
+  value = azurerm_storage_account.main.name
 }
 
 output "sp_name" {
@@ -7,5 +7,5 @@ output "sp_name" {
 }
 
 output "function_name" {
-    value = azurerm_linux_function_app.main.name
+  value = azurerm_linux_function_app.main.name
 }

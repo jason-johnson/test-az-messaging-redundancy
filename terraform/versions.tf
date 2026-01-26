@@ -6,7 +6,7 @@ terraform {
     }
     namep = {
       source  = "jason-johnson/namep"
-      version = "~> 1.0"
+      version = "~> 2.2.0"
     }
   }
 }
