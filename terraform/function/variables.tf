@@ -10,6 +10,8 @@ variable "resource_group_location" {
   description = "resource group location for function"
 }
 
+variable "namep_configuration" {}
+
 variable "app_insights_connection_string" {}
 
 variable "app_insights_instrumentation_key" {}

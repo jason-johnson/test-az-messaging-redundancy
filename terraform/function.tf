@@ -2,6 +2,7 @@
 module "main-function" {
   source                           = "./function"
   name                             = "main"
+  namep_configuration              = data.namep_configuration.main
   resource_group_name              = azurerm_resource_group.rg.name
   resource_group_location          = azurerm_resource_group.rg.location
   app_insights_connection_string   = azurerm_application_insights.main.connection_string
@@ -17,6 +18,7 @@ module "main-function" {
 module "second-function" {
   source                           = "./function"
   name                             = "second"
+  namep_configuration              = data.namep_configuration.main
   resource_group_name              = azurerm_resource_group.rg.name
   resource_group_location          = azurerm_resource_group.rg.location
   app_insights_connection_string   = azurerm_application_insights.main.connection_string
