@@ -2,12 +2,21 @@ data "namep_azure_locations" "main" {}
 
 data "namep_azure_caf_types" "main" {}
 
+resource "random_string" "rnd" {
+  length  = 4
+  special = false
+  upper   = false
+}
+
+
 data "namep_configuration" "main" {
   variable_maps = data.namep_azure_locations.main.location_maps
   types         = data.namep_azure_caf_types.main.types
   formats = {
     azure_nodashes                                  = "#{SLUG}#{APP}#{ENV}#{LOCS[LOC]}#{NAME}#{SALT}"
+    azure_nodashes_global                           = "#{SLUG}#{APP}#{ENV}#{LOCS[LOC]}#{NAME}#{RND}#{SALT}"
     azure_dashes                                    = "#{SLUG}-#{APP}-#{ENV}-#{LOCS[LOC]}-#{NAME}#{-SALT}"
+    azure_dashes_global                             = "#{SLUG}-#{APP}-#{ENV}-#{LOCS[LOC]}-#{NAME}-#{RND}#{-SALT}"
     azure_eventgrid_system_topic                    = "egst-#{APP}-#{ENV}-#{LOCS[LOC]}-#{NAME}#{-SALT}"
     azure_eventgrid_system_topic_event_subscription = "egsts-#{APP}-#{ENV}-#{LOCS[LOC]}-#{NAME}#{-SALT}"
   }
@@ -15,8 +24,9 @@ data "namep_configuration" "main" {
   variables = {
     name = var.name
     loc  = "westeurope"
-    app  = "rdcyb"
+    app  = "rdcy"
     env  = "demo"
+    rnd  = random_string.rnd.result
     salt = var.salt
   }
 }

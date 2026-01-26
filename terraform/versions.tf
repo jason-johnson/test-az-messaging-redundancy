@@ -8,5 +8,9 @@ terraform {
       source  = "jason-johnson/namep"
       version = "~> 2.2.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.7.1"
+    }
   }
 }
