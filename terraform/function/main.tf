@@ -1,9 +1,10 @@
 resource "azurerm_storage_account" "main" {
-  name                     = provider::namep::namestring("azurerm_storage_account", var.namep_configuration.configuration, { name = var.name })
-  resource_group_name      = var.resource_group_name
-  location                 = var.resource_group_location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+  name                      = provider::namep::namestring("azurerm_storage_account", var.namep_configuration.configuration, { name = var.name })
+  resource_group_name       = var.resource_group_name
+  location                  = var.resource_group_location
+  account_tier              = "Standard"
+  account_replication_type  = "LRS"
+  shared_access_key_enabled = false
 }
 
 resource "azurerm_service_plan" "main" {
@@ -19,9 +20,9 @@ resource "azurerm_linux_function_app" "main" {
   resource_group_name = var.resource_group_name
   location            = var.resource_group_location
 
-  storage_account_name       = azurerm_storage_account.main.name
-  storage_account_access_key = azurerm_storage_account.main.primary_access_key
-  service_plan_id            = azurerm_service_plan.main.id
+  storage_account_name          = azurerm_storage_account.main.name
+  storage_uses_managed_identity = true
+  service_plan_id               = azurerm_service_plan.main.id
 
   site_config {
     application_insights_connection_string  = var.app_insights_connection_string
@@ -53,6 +54,31 @@ resource "azurerm_linux_function_app" "main" {
   identity {
     type = "SystemAssigned"
   }
+}
+
+# Role assignments for Function App to access Storage Account
+resource "azurerm_role_assignment" "fun2storage_blob" {
+  scope                = azurerm_storage_account.main.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = azurerm_linux_function_app.main.identity[0].principal_id
+}
+
+resource "azurerm_role_assignment" "fun2storage_queue" {
+  scope                = azurerm_storage_account.main.id
+  role_definition_name = "Storage Queue Data Contributor"
+  principal_id         = azurerm_linux_function_app.main.identity[0].principal_id
+}
+
+resource "azurerm_role_assignment" "fun2storage_table" {
+  scope                = azurerm_storage_account.main.id
+  role_definition_name = "Storage Table Data Contributor"
+  principal_id         = azurerm_linux_function_app.main.identity[0].principal_id
+}
+
+resource "azurerm_role_assignment" "fun2storage_account" {
+  scope                = azurerm_storage_account.main.id
+  role_definition_name = "Storage Account Contributor"
+  principal_id         = azurerm_linux_function_app.main.identity[0].principal_id
 }
 
 resource "azurerm_role_assignment" "fun2acr" {
