@@ -62,7 +62,6 @@ module mainFunction 'modules/function.bicep' = {
     location: location
     functionName: 'main'
     baseName: baseName
-    baseNameNoDashes: baseNameNoDashes
     uniqueSuffix: uniqueSuffix
     appInsightsConnectionString: sharedResources.outputs.appInsightsConnectionString
     appInsightsInstrumentationKey: sharedResources.outputs.appInsightsInstrumentationKey
@@ -83,7 +82,6 @@ module secondFunction 'modules/function.bicep' = {
     location: location
     functionName: 'sec'
     baseName: baseName
-    baseNameNoDashes: baseNameNoDashes
     uniqueSuffix: uniqueSuffix
     appInsightsConnectionString: sharedResources.outputs.appInsightsConnectionString
     appInsightsInstrumentationKey: sharedResources.outputs.appInsightsInstrumentationKey

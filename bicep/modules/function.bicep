@@ -9,9 +9,6 @@ param functionName string
 @description('Base name with dashes for resource naming')
 param baseName string
 
-@description('Base name without dashes for resources that don\'t support dashes')
-param baseNameNoDashes string
-
 @description('Unique suffix for globally unique names')
 param uniqueSuffix string
 
@@ -39,9 +36,12 @@ param serviceBusTopicName string
 @description('Service Bus subscription name')
 param serviceBusSubscriptionName string
 
-// Storage Account for Function App
+// Generate a short unique suffix for storage account (max 24 chars total)
+var storageAccountName = take('st${functionName}${uniqueSuffix}', 24)
+
+// Storage Account for Function App - no shared key access needed
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
-  name: 'st${baseNameNoDashes}${functionName}${uniqueSuffix}'
+  name: storageAccountName
   location: location
   sku: {
     name: 'Standard_LRS'
@@ -50,6 +50,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   properties: {
     supportsHttpsTrafficOnly: true
     minimumTlsVersion: 'TLS1_2'
+    allowSharedKeyAccess: false // Using managed identity instead
   }
 }
 
@@ -67,7 +68,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2023-01-01' = {
   }
 }
 
-// Linux Function App
+// Linux Function App - using managed identity for storage
 resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
   name: 'func-${baseName}-${functionName}'
   location: location
@@ -83,16 +84,9 @@ resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
       acrUseManagedIdentityCreds: true
       appSettings: [
         {
-          name: 'AzureWebJobsStorage'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
-        }
-        {
-          name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storageAccount.name};EndpointSuffix=${environment().suffixes.storage};AccountKey=${storageAccount.listKeys().keys[0].value}'
-        }
-        {
-          name: 'WEBSITE_CONTENTSHARE'
-          value: toLower(functionName)
+          // Use identity-based connection for AzureWebJobsStorage
+          name: 'AzureWebJobsStorage__accountName'
+          value: storageAccount.name
         }
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
@@ -134,6 +128,50 @@ resource functionApp 'Microsoft.Web/sites@2023-01-01' = {
       httpLoggingEnabled: true
       logsDirectorySizeLimit: 35
     }
+  }
+}
+
+// Role Assignment - Function App to Storage Account (Storage Blob Data Owner)
+resource storageBlobRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageAccount.id, functionApp.id, 'storageblobowner')
+  scope: storageAccount
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', 'b7e6dc6d-f1e8-4753-8033-0f276bb0955b') // Storage Blob Data Owner
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+// Role Assignment - Function App to Storage Account (Storage Account Contributor - for queues/tables)
+resource storageAccountContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageAccount.id, functionApp.id, 'storageaccountcontributor')
+  scope: storageAccount
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '17d1049b-9a84-46fb-8f53-869881c3d3ab') // Storage Account Contributor
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+// Role Assignment - Function App to Storage Account (Storage Queue Data Contributor)
+resource storageQueueRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageAccount.id, functionApp.id, 'storagequeuecontributor')
+  scope: storageAccount
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '974c5e8b-45b9-4653-ba55-5f855dd0fb88') // Storage Queue Data Contributor
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
+  }
+}
+
+// Role Assignment - Function App to Storage Account (Storage Table Data Contributor)
+resource storageTableRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(storageAccount.id, functionApp.id, 'storagetablecontributor')
+  scope: storageAccount
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3') // Storage Table Data Contributor
+    principalId: functionApp.identity.principalId
+    principalType: 'ServicePrincipal'
   }
 }
 
