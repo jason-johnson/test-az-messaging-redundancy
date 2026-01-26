@@ -1,5 +1,5 @@
 resource "azurerm_storage_account" "main" {
-  name                     = provider::namep::namestring("azurerm_storage_account", var.namep_configuration.configuration)
+  name                     = provider::namep::namestring("azurerm_storage_account", var.namep_configuration.configuration, { name = var.name })
   resource_group_name      = var.resource_group_name
   location                 = var.resource_group_location
   account_tier             = "Standard"
