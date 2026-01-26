@@ -33,7 +33,7 @@ jobs:
           useWorkspace: ${{ parameters.useWorkspace }}
           resourceGroupName: $(terraformResourceGroupName)
           env:
-            TF_VAR_branch: $(saltVar)
+            TF_VAR_salt: $(saltVar)
   - job: deploy
     dependsOn: terraform
     variables:

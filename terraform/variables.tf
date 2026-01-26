@@ -1,4 +1,4 @@
-variable "branch" {
-  description = "optional branch for use in the name"
+variable "salt" {
+  description = "optional salt for use in the name"
   default = ""
 }
