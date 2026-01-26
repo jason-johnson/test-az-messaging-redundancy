@@ -16,7 +16,7 @@ variables:
       value: ${{ parameters.salt }}
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'jasojohnson-mcaps'
 
 steps:
   - template: terraform.yml
