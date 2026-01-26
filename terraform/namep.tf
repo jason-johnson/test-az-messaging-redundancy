@@ -15,7 +15,7 @@ data "namep_configuration" "main" {
   variables = {
     name = var.name
     loc  = "westeurope"
-    app  = "rdncy"
+    app  = "rdcy"
     env  = "demo"
     salt = var.salt
   }
