@@ -18,8 +18,8 @@ param app string = 'rdcy'
 @description('Environment abbreviation')
 param env string = 'demo'
 
-// Generate a unique suffix for globally unique names
-var uniqueSuffix = uniqueString(subscription().subscriptionId, name, salt)
+// Generate a unique suffix for globally unique names (max 4 chars)
+var uniqueSuffix = take(uniqueString(subscription().subscriptionId, name, salt), 4)
 var locationShort = 'weu'
 
 // Naming convention variables

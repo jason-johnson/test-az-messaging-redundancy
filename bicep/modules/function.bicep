@@ -36,10 +36,9 @@ param serviceBusTopicName string
 @description('Service Bus subscription name')
 param serviceBusSubscriptionName string
 
-// Generate a short unique suffix for storage account (max 24 chars total)
-var storageAccountName = take('st${functionName}${uniqueSuffix}', 24)
-
 // Storage Account for Function App - no shared key access needed
+// With 4-char uniqueSuffix: st + functionName + uniqueSuffix stays well under 24 chars
+var storageAccountName = 'st${functionName}${uniqueSuffix}'
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-01-01' = {
   name: storageAccountName
   location: location

@@ -13,6 +13,7 @@ param baseNameNoDashes string
 param uniqueSuffix string
 
 // Container Registry (globally unique name required, no dashes allowed)
+// With 4-char uniqueSuffix the name stays within limits
 resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' = {
   name: 'cr${baseNameNoDashes}${uniqueSuffix}'
   location: location
