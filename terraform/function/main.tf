@@ -8,7 +8,7 @@ resource "azurerm_storage_account" "main" {
 }
 
 resource "azurerm_service_plan" "main" {
-  name                = provider::namep::namestring("azurerm_app_service_plan", var.namep_configuration.configuration)
+  name                = provider::namep::namestring("azurerm_app_service_plan", var.namep_configuration.configuration, { name = var.name })
   resource_group_name = var.resource_group_name
   location            = var.resource_group_location
   os_type             = "Linux"
@@ -16,7 +16,7 @@ resource "azurerm_service_plan" "main" {
 }
 
 resource "azurerm_linux_function_app" "main" {
-  name                = provider::namep::namestring("azurerm_function_app", var.namep_configuration.configuration)
+  name                = provider::namep::namestring("azurerm_function_app", var.namep_configuration.configuration, { name = var.name })
   resource_group_name = var.resource_group_name
   location            = var.resource_group_location
 
