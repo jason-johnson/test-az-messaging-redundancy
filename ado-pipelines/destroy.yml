@@ -31,4 +31,4 @@ steps:
       resourceGroupName: $(terraformResourceGroupName)
       action: destroy
       env:
-        TF_VAR_branch: $(saltVar)
+        TF_VAR_salt: $(saltVar)
