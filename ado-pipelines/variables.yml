@@ -12,7 +12,7 @@ variables:
   - name: terraformVersion
     value: 1.14.3
   - name: terraformPath
-    value: terraform
+    value: infra/terraform
   - name: terraformContainerName
     value: terraform-az-messaging
   - name: terraformStorageAccountName
